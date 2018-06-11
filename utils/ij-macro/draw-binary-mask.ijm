@@ -2,7 +2,8 @@
 close("*.tif");
 
 // don't show images
-setBatchMode(true);
+batchMode = true
+setBatchMode(batchMode);
 
 // Define Input Folder
 input = getDirectory("Select a Directory for import");
@@ -30,7 +31,8 @@ for (iFile = 0; iFile < filenames.length; ++iFile){
 			open(imagePath);
 			saveAs("JPG", imagePath);
 			getDimensions(width, height, channels, slices, frames);
-			close();
+			if (!batchMode)
+	 			close();
 
 			newImage("mask", "8-bit black", width, height, 1); // 1 slice
 			run("ROI Manager...");
@@ -42,8 +44,9 @@ for (iFile = 0; iFile < filenames.length; ++iFile){
 			saveAs("PNG", maskPath);
 			// close roi manager to remove old spots
 			run("Close");
-
-			close();
+			if (!batchMode)
+				close();
 		}
 	}
+	showProgress(iFile, filenames);
 }
