@@ -12,7 +12,7 @@ input = getDirectory("Select a Directory for import");
 print(input)
 
 // Define Output Folder
-output = //getDirectory("Select a Directory for output"); // "/Users/kkolyva/Desktop/test_f/d/";
+output = getDirectory("Select a Directory for output"); // "/Users/kkolyva/Desktop/test_f/d/";
 
 // Get list of files
 filenames = getFileList(input);
