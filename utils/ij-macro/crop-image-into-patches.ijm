@@ -1,5 +1,7 @@
-// Close all open tif's and nd2's
+// Close all open tif's and other images
 close("*.tif");
+close("*.png");
+close("*.jpg");
 
 // don't show images
 batchMode = false;
@@ -10,7 +12,7 @@ input = getDirectory("Select a Directory for import");
 print(input)
 
 // Define Output Folder
-// output = getDirectory("Select a Directory for output"); // "/Users/kkolyva/Desktop/test_f/d/";
+output = //getDirectory("Select a Directory for output"); // "/Users/kkolyva/Desktop/test_f/d/";
 
 // Get list of files
 filenames = getFileList(input);
@@ -23,11 +25,11 @@ prefix = "fish_"
 pWidth = 256;
 pHeight = 256;
 
-for (iFile = 0; iFile < 1 /*filenames.length*/; ++iFile){
+for (iFile = 0; iFile < filenames.length; ++iFile){
 	if (startsWith(filenames[iFile], prefix)){
 
 		// you don't care about the correspondences img-to-mask
-		// just crop verything into pieces but with proper naming  	
+		// just crop everything into pieces but with proper naming  	
 
 		imagePath = input + filenames[iFile]; 
 		imageName = filenames[iFile];
@@ -36,16 +38,23 @@ for (iFile = 0; iFile < 1 /*filenames.length*/; ++iFile){
 		open(imagePath);
 
 		getDimensions(gWidth, gHeight, channels, slices, frames);
-
-
+		
+		title = getTitle();
+		ext = substring(title, lengthOf(title) - 3, lengthOf(title));
+		title = substring(title, 0, lengthOf(title) - 4);
 		
 		for(i = 0; i < gWidth / pWidth; i++){
 			for (j = 0; j < gHeight / pHeight; j++){
 				makeRectangle(i*pWidth, j*pHeight, pWidth, pHeight);
-				run("Duplicate...", "title=" + imageName + i + j);
-				close();
+				run("Duplicate...", "title=" + title + "-" +i + "-" + j);
+				saveAs(ext, output + title + "-" +i + "-" + j);
+				
+				if (!batchMode)
+					close();
 			}	
 		}
+		if (!batchMode)
+			close();
 	}
 	showProgress(iFile, filenames);
 }
